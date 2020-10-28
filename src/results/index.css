@@ -1,0 +1,36 @@
+
+  
+  .zoom:hover {
+    transition: transform .5s ease-in-out;
+    transform: scale(1.05); 
+  }
+
+  .rotate {
+    animation: rotation 20s infinite linear;
+  }
+
+  @keyframes rotation {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(359deg);
+    }
+  }
+
+  #logo img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+  }
+
+  div.logo-div {
+    margin-top: 200px;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
+
+
+  
