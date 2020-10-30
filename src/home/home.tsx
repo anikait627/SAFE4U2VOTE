@@ -43,10 +43,6 @@ export const Home: React.FC<SearchProps> = (props) => {
     const onFormSubmit = async () => {
 
         try {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const locations = await fetch(`http://localhost:8888/locations?address=${address}&city=${city}&state=${state}&zipCode=${zipCode}`).then((resp:any) => resp.json());
-            addToast("Successful Search", {appearance: 'success'});
-            console.log(locations);
             window.location.href = `/results?address=${address}&city=${city}&state=${state}&zipCode=${zipCode}`;
         } catch(e) {
             addToast(`Search Not Successful: ${e}`, {appearance: 'error'});
