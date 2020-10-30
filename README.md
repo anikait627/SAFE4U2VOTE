@@ -1,5 +1,5 @@
 ![CI](https://github.com/anikait627/SAFE4U2VOTE/workflows/CI/badge.svg?branch=master)
-![Heroku](https://heroku-badge.herokuapp.com/?app=safe4u2vote)
+[![Heroku](https://safe4u2vote.herokuapp.com/?app=safe4u2vote)]
 
 [SAFE4U2VOTE Live Site](https://safe4u2vote.herokuapp.com/)
 
