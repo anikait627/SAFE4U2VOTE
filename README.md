@@ -23,18 +23,12 @@ Open [http://localhost:8888](http://localhost:8888) to view it in the browser.
 
 ***If you change anything on the backend side you need to restart the server to view changes. 
 
-### `npm test`
+# When Pushing Code:
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### `npm run lint`
+Run linter to see build errors
 
-### `npm run build`
+### `npm run fix`
+Fix linter errors
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
+Build needs to pass linter errors in order to merge with master.
