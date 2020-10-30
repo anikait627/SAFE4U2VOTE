@@ -1,5 +1,7 @@
 ![CI](https://github.com/anikait627/SAFE4U2VOTE/workflows/CI/badge.svg?branch=master)
 
+[SAFE4U2VOTE Live Site](https://safe4u2vote.herokuapp.com/)
+
 ## Whenever downloading dependencies
 
 ### `npm install --save`
