@@ -114,7 +114,8 @@ export const Results: React.FC<SearchProps> = () => {
         try {
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const locations = await fetch(`http://localhost:8888/locations?address=${address}&city=${city}&state=${state}&zipCode=${zipCode}`).then((resp:any) => resp.json());
+            const locations = await fetch(`/locations?address=${address}&city=${city}&state=${state}&zipCode=${zipCode}`).then((resp:any) => resp.json());
+            console.log(locations)
             addToast("Successful Search", {appearance: 'success'});
             changeData(locations);
 
