@@ -5,6 +5,8 @@ require('dotenv').config();
 const fetch = require('node-fetch');
 const app = express();
 
+const port = process.env.PORT || 8888;
+
 app.use(cors())
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -21,7 +23,9 @@ app.get("/locations", async (req, res) => {
 
 });
 
+app.use(express.static('build'))
+app.use("*", (req, res) => res.sendFile(process.cwd()+"/build/index.html"));
 
-app.listen(8888, () =>
-  console.log('Express server is running on localhost:8888')
+app.listen(parseInt(port, 10), () =>
+  console.log(`Express server is running on localhost:${port}`)
 );
