@@ -19,7 +19,7 @@ app.get("/locations", async (req, res) => {
     const addressVar = `${address} ${city} ${state} ${zipCode}`;
     const fullRequest = baseCivicsRequest + "?key=" + process.env.GOOGLE_API_KEY + "&address=" + encodeURIComponent(addressVar) + "&electionid=7000";
     const locations = await fetch(fullRequest).then((resp) => resp.json());
-    return res.json(locations['earlyVoteSites']);
+    return res.json(locations['pollingLocations']);
 
 });
 
