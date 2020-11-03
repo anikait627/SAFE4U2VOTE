@@ -51,6 +51,30 @@ app.get("/locations", async (req, res) => {
 
     //return res.json(locations['pollingLocations']);
 
+    //COVID index
+    //for every location in the locations['earlyVoteSites']
+    for (const locat in earlyloca){
+      locat[index] = "5";
+      //get county name??
+      //get the region name for population density
+
+      //distance
+      //through Google Map API
+
+      //get COVID total infected of a county (totalInfect)
+      //get COVID testing positive rate of recent 3 weeks (posiRate)
+      //get population density over a region (popuDen)
+        //need to figure out how this API works for a region
+      //COVID Index = totalInfect*posiRate*popuDen (not scaled)
+    }
+      //Scaled COVID Index:
+      //get total infected of the State
+      //get total infected of the county
+      //COVID Index = (total infected of the county/total infected of the State)*numbets of counties of a State*population density of region/population density of the county * 5
+      //any index greater than 5 could has more severity of COVID than others
+
+      //store them as locations['COVID-Index']
+      return res.json(earlyloca);
 });
 
 app.use(express.static('build'))
