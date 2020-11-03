@@ -37,7 +37,7 @@
     "client": "npm start",
     "server": "node server.js",
     "dev": "concurrently \"npm run server\" \"npm run client\""
-    },
+  },
   "eslintConfig": {
     "extends": "react-app"
   },

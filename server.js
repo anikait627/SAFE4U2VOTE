@@ -17,18 +17,26 @@ app.get("/locations", async (req, res) => {
     const addressVar = `${address} ${city} ${state} ${zipCode}`;
     const fullRequest = baseCivicsRequest + "?key=" + process.env.GOOGLE_API_KEY + "&address=" + encodeURIComponent(addressVar) + "&electionid=7000";
     const locations = await fetch(fullRequest).then((resp) => resp.json());
-    return res.json(locations['earlyVoteSites']);
+    const earlyloca = locations['earlyVoteSites'];
+    
+   
 
+    //COVID index
     //for every location in the locations['earlyVoteSites']
-      //get county name
+    for (const locat in earlyloca){
+      locat[index] = "5";
+      //get county name??
       //get the region name for population density
+
+      //distance
+      //through Google Map API
 
       //get COVID total infected of a county (totalInfect)
       //get COVID testing positive rate of recent 3 weeks (posiRate)
       //get population density over a region (popuDen)
         //need to figure out how this API works for a region
       //COVID Index = totalInfect*posiRate*popuDen (not scaled)
-      
+    }
       //Scaled COVID Index:
       //get total infected of the State
       //get total infected of the county
@@ -36,6 +44,7 @@ app.get("/locations", async (req, res) => {
       //any index greater than 5 could has more severity of COVID than others
 
       //store them as locations['COVID-Index']
+      return res.json(earlyloca);
 });
 
 
