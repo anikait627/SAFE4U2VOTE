@@ -27,7 +27,7 @@ app.get("/locations", async (req, res) => {
     //COVID index
     //for every location in the locations['earlyVoteSites']
     for (const locat in pollloca){
-      locat[index] = "5";
+      locat["index"] = "5";
       //get county name??
       //get the region name for population density
 
