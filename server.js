@@ -26,8 +26,11 @@ app.get("/locations", async (req, res) => {
 
     //COVID index
     //for every location in the locations['earlyVoteSites']
-    for (const locat in pollloca){
-      locat["index"] = "5";
+    for (var locat in Object.keys(pollloca)) {
+
+      var ratio = (Math.random(10) + Math.random()).toFixed(2);
+      pollloca[locat] = {...pollloca[locat], index: ratio};
+
       //get county name??
       //get the region name for population density
 
@@ -47,6 +50,10 @@ app.get("/locations", async (req, res) => {
       //any index greater than 5 could has more severity of COVID than others
 
       //store them as locations['COVID-Index']
+
+    // sort the res by covid indx
+    pollloca.sort(function(a,b) {return a.index - b.index});
+    
     return res.json(pollloca);
 
     //return res.json(locations['pollingLocations']);

@@ -91,7 +91,7 @@ export const Results: React.FC<SearchProps> = () => {
                                 </Col>
                                 <Col>
                                     <Card.Text style={{float: 'right'}}>
-                                    Covid Index: ADD INDEX VARIABLE
+                                        Covid Index: {data[i]['index']}
                                     </Card.Text>
                                 </Col>
                             </Row>
@@ -118,6 +118,7 @@ export const Results: React.FC<SearchProps> = () => {
             console.log(locations)
             addToast("Successful Search", {appearance: 'success'});
             changeData(locations);
+            console.log(locations);
 
         } catch(e) {
             addToast(`Search Not Successful: ${e}`, {appearance: 'error'});
