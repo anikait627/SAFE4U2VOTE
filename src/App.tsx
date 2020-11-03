@@ -12,8 +12,7 @@ import { ToastProvider } from 'react-toast-notifications'
 
 class App extends Component {
 
-  render() {
-
+  render(): JSX.Element {
     return(
       <Router>
         <div className="App" id='page'>

@@ -14,7 +14,7 @@ export interface SearchProps {
     defaultIndx?: number
 }
 
-export const Results: React.FC<SearchProps> = (props) => {
+export const Results: React.FC<SearchProps> = () => {
 
     const loc = useLocation();
 
@@ -43,6 +43,7 @@ export const Results: React.FC<SearchProps> = (props) => {
     const onZipCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => changeZipCode(e.target.value || '');
 
     // returned location
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [data, changeData] = React.useState([] as any[]);
 
     // check if form filled  out
@@ -54,9 +55,9 @@ export const Results: React.FC<SearchProps> = (props) => {
     }
 
     // change data on search
-    var _createCards = React.useCallback(() => {
+    const _createCards = React.useCallback(() => {
         
-        let cards = [];
+        const cards = [];
         // check size of data
         if(data.length === 0) return;
         const tempIndx = (data.length > 10) ? 10 : data.length;
@@ -94,7 +95,7 @@ export const Results: React.FC<SearchProps> = (props) => {
                                     </Card.Text>
                                 </Col>
                             </Row>
-                            <a href={search} target='_blank' ><Button variant="primary" style={{width: '100%', marginTop: '20px'}}>Open Google Maps</Button></a>
+                            <a href={search} target='_blank' rel='noreferrer' ><Button variant="primary" style={{width: '100%', marginTop: '20px'}}>Open Google Maps</Button></a>
                         </Card.Body>
                     </Card>
 
@@ -112,7 +113,9 @@ export const Results: React.FC<SearchProps> = (props) => {
         
         try {
 
-            const locations = await fetch(`http://localhost:8888/locations?address=${address}&city=${city}&state=${state}&zipCode=${zipCode}`).then((resp:any) => resp.json());
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const locations = await fetch(`/locations?address=${address}&city=${city}&state=${state}&zipCode=${zipCode}`).then((resp:any) => resp.json());
+            console.log(locations)
             addToast("Successful Search", {appearance: 'success'});
             changeData(locations);
 

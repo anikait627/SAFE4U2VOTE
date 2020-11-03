@@ -5,6 +5,8 @@ require('dotenv').config();
 const fetch = require('node-fetch');
 const app = express();
 
+const port = process.env.PORT || 8888;
+
 app.use(cors())
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -17,9 +19,7 @@ app.get("/locations", async (req, res) => {
     const addressVar = `${address} ${city} ${state} ${zipCode}`;
     const fullRequest = baseCivicsRequest + "?key=" + process.env.GOOGLE_API_KEY + "&address=" + encodeURIComponent(addressVar) + "&electionid=7000";
     const locations = await fetch(fullRequest).then((resp) => resp.json());
-    const earlyloca = locations['earlyVoteSites'];
-    
-   
+    return res.json(locations['pollingLocations']);
 
     //COVID index
     //for every location in the locations['earlyVoteSites']
@@ -47,7 +47,9 @@ app.get("/locations", async (req, res) => {
       return res.json(earlyloca);
 });
 
+app.use(express.static('build'))
+app.use("*", (req, res) => res.sendFile(process.cwd()+"/build/index.html"));
 
-app.listen(8888, () =>
-  console.log('Express server is running on localhost:8888')
+app.listen(parseInt(port, 10), () =>
+  console.log(`Express server is running on localhost:${port}`)
 );
