@@ -26,7 +26,7 @@ app.get("/locations", async (req, res) => {
 
     //COVID index
     //for every location in the locations['earlyVoteSites']
-    for (var locat in Object.keys(pollloca)) {
+    for (var locat in pollloca) {
 
       var ratio = (Math.random(10) + Math.random()).toFixed(2);
       pollloca[locat] = {...pollloca[locat], index: ratio};
@@ -52,7 +52,7 @@ app.get("/locations", async (req, res) => {
       //store them as locations['COVID-Index']
 
     // sort the res by covid indx
-    pollloca.sort((a,b) => {return a.index - b.index});
+    pollloca.sort((a,b) => a.index - b.index);
     
     return res.json(pollloca);
 
