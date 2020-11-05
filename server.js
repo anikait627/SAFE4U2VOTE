@@ -23,6 +23,10 @@ app.get("/locations", async (req, res) => {
 
 });
 
+const baseCovidRequest = "https://knowi.com/api/data/ipE4xJhLBkn8H8jisFisAdHKvepFR5I4bGzRySZ2aaXlJgie?entityName=County%207%20day%20growth%20rates";
+const county = "Brazos%20County";
+const fullCovidRequest = baseCovidRequest + "&c9SqlFilter=select%20*%20where%20County%20like%20" + county + "%20and%20Type%20like%20confirmed%20limit%201";
+
 app.use(express.static('build'))
 app.use("*", (req, res) => res.sendFile(process.cwd()+"/build/index.html"));
 
