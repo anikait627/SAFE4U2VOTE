@@ -30,7 +30,7 @@ app.get("/locations", async (req, res) => {
 
       var ratio = (Math.random(10) + Math.random()).toFixed(2);
       pollloca[locat] = {...pollloca[locat], index: ratio};
-
+      pollloca[locat] = {...pollloca[locat], distance: ratio*3};
       //get county name??
       //get the region name for population density
 
