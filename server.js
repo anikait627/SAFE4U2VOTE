@@ -17,12 +17,11 @@ app.get("/locations", async (req, res) => {
     const baseCivicsRequest = "https://www.googleapis.com/civicinfo/v2/voterinfo";
     const { address, city, state, zipCode }  = req.query;
     const addressVar = `${address} ${city} ${state} ${zipCode}`;
-    const fullRequest = baseCivicsRequest + "?key=" + process.env.GOOGLE_API_KEY + "&address=" + encodeURIComponent(addressVar) + "&electionid=7000";
+    const fullRequest = baseCivicsRequest + "?key=" + process.env.GOOGLE_API_KEY + "&address=" + encodeURIComponent(addressVar) + "&electionid=2000";
     const locations = await fetch(fullRequest).then((resp) => resp.json());
-
     const pollloca = locations['pollingLocations'];
     
-   
+   //const distanceRequest = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=H8MW%2BWP%20Kolkata%20India&destinations=GCG2%2B3M%20Kolkata%20India&key="
 
     //COVID index
     //for every location in the locations['earlyVoteSites']
