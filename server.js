@@ -19,8 +19,44 @@ app.get("/locations", async (req, res) => {
     const addressVar = `${address} ${city} ${state} ${zipCode}`;
     const fullRequest = baseCivicsRequest + "?key=" + process.env.GOOGLE_API_KEY + "&address=" + encodeURIComponent(addressVar) + "&electionid=7000";
     const locations = await fetch(fullRequest).then((resp) => resp.json());
-    return res.json(locations['earlyVoteSites']);
 
+    const pollloca = locations['pollingLocations'];
+    
+   
+
+    //COVID index
+    //for every location in the locations['earlyVoteSites']
+    for (var locat in pollloca) {
+
+      var ratio = (Math.random(10) + Math.random()).toFixed(2);
+      pollloca[locat] = {...pollloca[locat], index: ratio};
+
+      //get county name??
+      //get the region name for population density
+
+      //distance
+      //through Google Map API
+
+      //get COVID total infected of a county (totalInfect)
+      //get COVID testing positive rate of recent 3 weeks (posiRate)
+      //get population density over a region (popuDen)
+        //need to figure out how this API works for a region
+      //COVID Index = totalInfect*posiRate*popuDen (not scaled)
+    }
+      //Scaled COVID Index:
+      //get total infected of the State
+      //get total infected of the county
+      //COVID Index = (total infected of the county/total infected of the State)*numbets of counties of a State*population density of region/population density of the county * 5
+      //any index greater than 5 could has more severity of COVID than others
+
+      //store them as locations['COVID-Index']
+
+    // sort the res by covid indx
+    pollloca.sort((a,b) => a.index - b.index);
+    
+    return res.json(pollloca);
+
+    //return res.json(locations['pollingLocations']);
 });
 
 const baseCovidRequest = "https://knowi.com/api/data/ipE4xJhLBkn8H8jisFisAdHKvepFR5I4bGzRySZ2aaXlJgie?entityName=County%207%20day%20growth%20rates";
