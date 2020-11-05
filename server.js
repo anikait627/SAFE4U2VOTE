@@ -17,7 +17,7 @@ app.get("/locations", async (req, res) => {
     const baseCivicsRequest = "https://www.googleapis.com/civicinfo/v2/voterinfo";
     const { address, city, state, zipCode }  = req.query;
     const addressVar = `${address} ${city} ${state} ${zipCode}`;
-    const fullRequest = baseCivicsRequest + "?key=" + process.env.GOOGLE_API_KEY + "&address=" + encodeURIComponent(addressVar) + "&electionid=7000";
+    const fullRequest = baseCivicsRequest + "?key=" + process.env.GOOGLE_API_KEY + "&address=" + encodeURIComponent(addressVar) + "&electionid=2000";
     const locations = await fetch(fullRequest).then((resp) => resp.json());
 
     const pollloca = locations['pollingLocations'];
