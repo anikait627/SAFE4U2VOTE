@@ -21,41 +21,26 @@ app.get("/locations", async (req, res) => {
     const locations = await fetch(fullRequest).then((resp) => resp.json());
     const pollloca = locations['pollingLocations'];
     
-   //const distanceRequest = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=H8MW%2BWP%20Kolkata%20India&destinations=GCG2%2B3M%20Kolkata%20India&key="
 
     //COVID index
     //for every location in the locations['earlyVoteSites']
     for (var locat in pollloca) {
-
       var ratio = (Math.random(10) + Math.random()).toFixed(2);
       pollloca[locat] = {...pollloca[locat], index: ratio};
-      pollloca[locat] = {...pollloca[locat], distance: ratio*3};
-      //get county name??
-      //get the region name for population density
+      
 
-      //distance
-      //through Google Map API
-
-      //get COVID total infected of a county (totalInfect)
-      //get COVID testing positive rate of recent 3 weeks (posiRate)
-      //get population density over a region (popuDen)
-        //need to figure out how this API works for a region
-      //COVID Index = totalInfect*posiRate*popuDen (not scaled)
+      const baseDisRequest = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial";
+      const addressVarOri = `${address} ${city} ${state} $`;
+      const addressVarDis = `${address} ${city} ${state} $`; //need to be fixed
+      const fullRequestDis = baseDisRequest + "&origins=" + encodeURIComponent(addressVarOri) + "&destinations=" + encodeURIComponent(addressVarDis) + "&key=" + process.env.GOOGLE_API_KEY;
+      const distances = await fetch(fullRequestDis).then((resp) => resp.json());
+      const distance = distances['rows']['distance']['text'];
+      //https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=Washington,DC&destinations=New+York+City,NY&key=YOUR_API_KEY
+      pollloca[locat] = {...pollloca[locat], distance: distances};
     }
-      //Scaled COVID Index:
-      //get total infected of the State
-      //get total infected of the county
-      //COVID Index = (total infected of the county/total infected of the State)*numbets of counties of a State*population density of region/population density of the county * 5
-      //any index greater than 5 could has more severity of COVID than others
-
-      //store them as locations['COVID-Index']
-
-    // sort the res by covid indx
     pollloca.sort((a,b) => a.index - b.index);
     
     return res.json(pollloca);
-
-    //return res.json(locations['pollingLocations']);
 });
 
 app.use(express.static('build'))
