@@ -14,14 +14,15 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // google civic api endpoint
 app.get("/locations", async (req, res) => {
 
-    const baseCivicsRequest = "https://www.googleapis.com/civicinfo/v2/voterinfo";
+    //https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=1500&type=restaurant&keyword=cruise&key=YOUR_API_KEY
+    const baseCivicsRequest = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362";
     const { address, city, state, zipCode }  = req.query;
-    const addressVar = `${address} ${city} ${state} ${zipCode}`;
-    const fullRequest = baseCivicsRequest + "?key=" + process.env.GOOGLE_API_KEY + "&address=" + encodeURIComponent(addressVar) + "&electionid=7000";
+    const addressVar = `${address}${city}`;
+    const fullRequest = baseCivicsRequest + "&radius=1500&type=restaurant&keyword=cruise" + "&key=" + process.env.GOOGLE_API_KEY;
     const locations = await fetch(fullRequest).then((resp) => resp.json());
 
-    const pollloca = locations['pollingLocations'];
-    
+    const pollloca = locations['results'];
+    console.log(pollloca)
    
 
     //COVID index
@@ -30,7 +31,7 @@ app.get("/locations", async (req, res) => {
 
       var ratio = (Math.random(10) + Math.random()).toFixed(2);
       pollloca[locat] = {...pollloca[locat], index: ratio};
-
+      pollloca[locat] = {...pollloca[locat], address: locat['vicinity']};
       //get county name??
       //get the region name for population density
 
@@ -52,7 +53,7 @@ app.get("/locations", async (req, res) => {
       //store them as locations['COVID-Index']
 
     // sort the res by covid indx
-    pollloca.sort((a,b) => a.index - b.index);
+    //pollloca.sort((a,b) => a.index - b.index);
     
     return res.json(pollloca);
 
