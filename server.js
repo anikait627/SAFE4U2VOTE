@@ -22,7 +22,7 @@ app.get("/locations", async (req, res) => {
     const locations = await fetch(fullRequest).then((resp) => resp.json());
 
     const pollloca = locations['results'];
-    console.log(pollloca)
+    
    
 
     //COVID index
@@ -31,7 +31,10 @@ app.get("/locations", async (req, res) => {
 
       var ratio = (Math.random(10) + Math.random()).toFixed(2);
       pollloca[locat] = {...pollloca[locat], index: ratio};
-      pollloca[locat] = {...pollloca[locat], address: locat['vicinity']};
+      pollloca[locat] = {...pollloca[locat], address: pollloca[locat]['vicinity']};
+      pollloca[locat] = {...pollloca[locat], city: "Sydney"};
+      pollloca[locat] = {...pollloca[locat], state: "N/A"};
+      pollloca[locat] = {...pollloca[locat], zipCode: "000000"};
       //get county name??
       //get the region name for population density
 
@@ -54,7 +57,7 @@ app.get("/locations", async (req, res) => {
 
     // sort the res by covid indx
     //pollloca.sort((a,b) => a.index - b.index);
-    
+    console.log(pollloca)
     return res.json(pollloca);
 
     //return res.json(locations['pollingLocations']);

@@ -32,7 +32,7 @@ export const Results: React.FC<SearchProps> = () => {
     // init variables for input
     const [address, changeAddress] = React.useState(queryParams.get('address') || '');
     const onAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => changeAddress(e.target.value || '');
-
+    
     const [city, changeCity] = React.useState(queryParams.get('city') || '');
     const onCityChange = (e: React.ChangeEvent<HTMLInputElement>) => changeCity(e.target.value || '');
 
@@ -41,7 +41,7 @@ export const Results: React.FC<SearchProps> = () => {
 
     const [zipCode, changeZipCode] = React.useState(queryParams.get('zipCode') || '');
     const onZipCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => changeZipCode(e.target.value || '');
-
+    
     // returned location
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [data, changeData] = React.useState([] as any[]);
@@ -65,7 +65,7 @@ export const Results: React.FC<SearchProps> = () => {
         // iterate for the top 10 cards
         for(let i = 0; i < tempIndx; i++) {
             // search for button
-            const search = 'https://www.google.com/maps/search/' + data[i]['address']['line1'] + " " + data[i]['address']['city'] + ', ' + data[i]['address']['state'] + ' ' + data[i]['address']['zip'];
+            const search = 'https://www.google.com/maps/search/' //+ data[i]['address']['line1'] + " " + data[i]['address']['city'] + ', ' + data[i]['address']['state'] + ' ' + data[i]['address']['zip'];
             cards.push(
                 <div style={{margin: '50px'}}>
 
@@ -74,7 +74,7 @@ export const Results: React.FC<SearchProps> = () => {
                             <Row>
                                 <Col>
                                     <Card.Title style={{float: 'left'}}>
-                                        {data[i]['address']['locationName']}
+                                        {data[i]['address']}
                                     </Card.Title>
                                 </Col>
                                 <Col>
@@ -86,7 +86,7 @@ export const Results: React.FC<SearchProps> = () => {
                             <Row>
                                 <Col>
                                     <Card.Text style={{float: 'left'}}>
-                                        {data[i]['address']['line1'] + " " + data[i]['address']['city'] + ', ' + data[i]['address']['state'] + ' ' + data[i]['address']['zip']}
+                                        {data[i]['address'] + " " + data[i]['city'] + ', ' + data[i]['state'] + ' ' + data[i]['zipCode']}
                                     </Card.Text>
                                 </Col>
                                 <Col>
