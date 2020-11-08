@@ -56,7 +56,7 @@ app.get("/locations", async (req, res) => {
       //store them as locations['COVID-Index']
 
     // sort the res by covid indx
-    //pollloca.sort((a,b) => a.index - b.index);
+    pollloca.sort((a,b) => a.index - b.index);
     console.log(pollloca)
     return res.json(pollloca);
 
