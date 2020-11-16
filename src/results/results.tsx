@@ -65,7 +65,7 @@ export const Results: React.FC<SearchProps> = () => {
         // iterate for the top 10 cards
         for(let i = 0; i < tempIndx; i++) {
             // search for button
-            const search = 'https://www.google.com/maps/search/' //+ data[i]['address']['line1'] + " " + data[i]['address']['city'] + ', ' + data[i]['address']['state'] + ' ' + data[i]['address']['zip'];
+            const search = 'https://www.google.com/maps/search/' + data[i]['address'] + " " + data[i]['city'] + ', ' + data[i]['state'] + ' ' + data[i]['zip'];
             cards.push(
                 <div style={{margin: '50px'}}>
 
