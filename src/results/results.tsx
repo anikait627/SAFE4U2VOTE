@@ -2,6 +2,7 @@ import  React from 'react';
 import { useLocation } from 'react-router-dom';
 import { Form, Col, Button, Card, Row } from 'react-bootstrap';
 import { useToasts } from 'react-toast-notifications';
+import { Dropdown } from 'react-bootstrap';
 import './index.css';
 import logo from '../assets/logo.png';
 
@@ -182,6 +183,22 @@ export const Results: React.FC<SearchProps> = () => {
                 </Form.Row>
 
             </Form>
+
+            {/* try sort on lower lvl */}
+            <Row>
+                <Col>
+                    <Dropdown style={{float: 'right', marginRight: '15px'}}>
+                        <Dropdown.Toggle variant="primary" id="">
+                            Sort By:
+                        </Dropdown.Toggle>
+
+                        <Dropdown.Menu>
+                            <Dropdown.Item>Location</Dropdown.Item>
+                            <Dropdown.Item>Covid Index</Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
+                </Col>
+            </Row>
 
             {/* form end */}
             {data.length !== 0 ? 
