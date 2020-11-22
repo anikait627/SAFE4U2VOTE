@@ -51,10 +51,7 @@ app.get("/locations", async (req, res) => {
       //any index greater than 5 could has more severity of COVID than others
 
       //store them as locations['COVID-Index']
-
-    // sort the res by covid indx
-    pollloca.sort((a,b) => a.index - b.index);
-    
+      
     return res.json(pollloca);
 
     //return res.json(locations['pollingLocations']);
