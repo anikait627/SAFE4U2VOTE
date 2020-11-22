@@ -20,24 +20,37 @@ app.get("/locations", async (req, res) => {
     const baseCivicsRequest = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=";
     const { address, city, state, zipCode }  = req.query;
     const addressVar = `${address}${city}`;
+    
 
     const GeoRequest = baseGeoRequest + address + ",+" + city + ",+" + state + "&key=" + process.env.GOOGLE_API_KEY;
     const lnglat = await fetch(GeoRequest).then((resp) => resp.json());
-    console.log(lnglat['results'][0]["geometry"]["location"]["lat"]);
+    address_component = lnglat['results'][0]["address_components"]
+    console.log(address_component[address_component.length-5]);
+    county = address_component[address_component.length-5]['short_name'];//.slice(0,-6);
+    console.log(county, county.substr(county.length-6));
+    if (county.substr(county.length-6) == "County"){county = address_component[address_component.length-5]['short_name'].slice(0,-6);}
+    console.log(county);
+
+    //https://services9.arcgis.com/6Hv9AANartyT7fJW/arcgis/rest/services/USCounties_cases_V1/FeatureServer/0/query?where=Countyname%20%3D%20'BRAZOS'&outFields=Deaths,Confirmed&outSR=4326&f=json
+    const covidRequest = "https://services9.arcgis.com/6Hv9AANartyT7fJW/arcgis/rest/services/USCounties_cases_V1/FeatureServer/0/query?where=Countyname%20%3D%20'" + county+ "'&outFields=Deaths,Confirmed&outSR=4326&f=json";
+    const covid = await fetch(covidRequest).then((resp) => resp.json());
+    console.log(covid['features'][0]['attributes']['Deaths'], covid['features'][0]['attributes']['Confirmed']);
+    const death = covid['features'][0]['attributes']['Deaths'];
+    const confirm = covid['features'][0]['attributes']['Confirmed'];
 
     const fullRequest = baseCivicsRequest + lnglat['results'][0]["geometry"]["location"]["lat"] + "," + lnglat['results'][0]["geometry"]["location"]["lng"]
     + "&radius=1500&type=restaurant" + "&key=" + process.env.GOOGLE_API_KEY;
     const locations = await fetch(fullRequest).then((resp) => resp.json());
 
     const pollloca = locations['results'];
-    console.log(pollloca)
+    //console.log(pollloca)
    
 
     //COVID index
     //for every location in the locations['earlyVoteSites']
     for (var locat in pollloca) {
 
-      var ratio = (Math.random(10) + Math.random()).toFixed(2);
+      var ratio = (death + confirm + Math.random()).toFixed(2);
       pollloca[locat] = {...pollloca[locat], index: ratio};
       pollloca[locat] = {...pollloca[locat], address: pollloca[locat]['vicinity']};
       pollloca[locat] = {...pollloca[locat], city: city};
