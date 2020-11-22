@@ -44,7 +44,7 @@ app.get("/locations", async (req, res) => {
     const locations = await fetch(fullRequest).then((resp) => resp.json());
 
     const pollloca = locations['results'];
-    //console.log(pollloca)
+    console.log(pollloca)
    
     
 
@@ -58,6 +58,7 @@ app.get("/locations", async (req, res) => {
       var ratio = (death + confirm + Math.random()).toFixed(2);
       pollloca[locat] = {...pollloca[locat], index: ratio};
       pollloca[locat] = {...pollloca[locat], address: pollloca[locat]['vicinity']};
+      pollloca[locat] = {...pollloca[locat], name: pollloca[locat]['name']};
       pollloca[locat] = {...pollloca[locat], city: city};
       pollloca[locat] = {...pollloca[locat], state: state};
       pollloca[locat] = {...pollloca[locat], zipCode: zipCode};

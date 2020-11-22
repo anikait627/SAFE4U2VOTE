@@ -74,7 +74,7 @@ export const Results: React.FC<SearchProps> = () => {
                             <Row>
                                 <Col>
                                     <Card.Title style={{float: 'left'}}>
-                                        {data[i]['address']}
+                                        {data[i]['name']}
                                     </Card.Title>
                                 </Col>
                                 <Col>
