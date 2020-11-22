@@ -17,17 +17,18 @@ app.get("/locations", async (req, res) => {
     const baseCivicsRequest = "https://www.googleapis.com/civicinfo/v2/voterinfo";
     const { address, city, state, zipCode }  = req.query;
     const addressVar = `${address} ${city} ${state} ${zipCode}`;
-    const fullRequest = baseCivicsRequest + "?key=" + process.env.GOOGLE_API_KEY + "&address=" + encodeURIComponent(addressVar) + "&electionid=7000";
+    const fullRequest = baseCivicsRequest + "?key=" + process.env.GOOGLE_API_KEY + "&address=" + encodeURIComponent(addressVar) + "&electionId=2000";
     const locations = await fetch(fullRequest).then((resp) => resp.json());
-
+    console.log(locations);
     const pollloca = locations['pollingLocations'];
+
     
    
 
     //COVID index
     //for every location in the locations['earlyVoteSites']
     for (var locat in pollloca) {
-
+      console.log(locat);
       var ratio = (Math.random(10) + Math.random()).toFixed(2);
       pollloca[locat] = {...pollloca[locat], index: ratio};
 

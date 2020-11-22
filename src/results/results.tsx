@@ -2,8 +2,10 @@ import  React from 'react';
 import { useLocation } from 'react-router-dom';
 import { Form, Col, Button, Card, Row } from 'react-bootstrap';
 import { useToasts } from 'react-toast-notifications';
+import { Dropdown } from 'react-bootstrap';
 import './index.css';
 import logo from '../assets/logo.png';
+import scale from '../assets/scale.svg';
 
 // setup interface for search
 export interface SearchProps {
@@ -21,7 +23,7 @@ export const Results: React.FC<SearchProps> = () => {
     const queryParams = React.useMemo(() => new URLSearchParams(loc.search), [loc]);
 
     React.useEffect(() => {
-        if (queryParams.get("address") && queryParams.get("city") && queryParams.get("state") && queryParams.get("zipCode")) {
+        if (queryParams.get("address") && queryParams.get("city") && queryParams.get("state") && queryParams.get("zipCode") && queryParams.get("county")) {
             onFormSubmit();
         }
     }, [queryParams])
@@ -36,19 +38,25 @@ export const Results: React.FC<SearchProps> = () => {
     const [city, changeCity] = React.useState(queryParams.get('city') || '');
     const onCityChange = (e: React.ChangeEvent<HTMLInputElement>) => changeCity(e.target.value || '');
 
+    const [county, changeCounty] = React.useState(queryParams.get('city') || '');
+    const onCountyChange = (e: React.ChangeEvent<HTMLInputElement>) => changeCounty(e.target.value || '');
+
     const [state, changeState] = React.useState(queryParams.get('state') || '');
     const onStateChange = (e: React.ChangeEvent<HTMLInputElement>) => changeState(e.target.value || '');
 
     const [zipCode, changeZipCode] = React.useState(queryParams.get('zipCode') || '');
     const onZipCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => changeZipCode(e.target.value || '');
 
+    // const [sort, changeSort] = React.useState();
+    // const onSortChange = (e: React.ChangeEvent<Dropdown>) => changeAddress(zipCode || '');
+    
     // returned location
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [data, changeData] = React.useState([] as any[]);
 
     // check if form filled  out
     const disableButton = () => {
-        if (address === '' || city === '' || state === '' || zipCode === '') {
+        if (address === '' || city === '' || state === '' || zipCode === '' || county == '') {
             return true;
         }
         return false
@@ -114,7 +122,7 @@ export const Results: React.FC<SearchProps> = () => {
         try {
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const locations = await fetch(`/locations?address=${address}&city=${city}&state=${state}&zipCode=${zipCode}`).then((resp:any) => resp.json());
+            const locations = await fetch(`/locations?address=${address}&city=${city}&county=${county}&state=${state}&zipCode=${zipCode}`).then((resp:any) => resp.json());
             console.log(locations)
             addToast("Successful Search", {appearance: 'success'});
             changeData(locations);
@@ -161,6 +169,13 @@ export const Results: React.FC<SearchProps> = () => {
 
                     <Col>
                         <Form.Group as={Col} controlId="">
+                            {/* <Form.Label>City</Form.Label> */}
+                            <Form.Control placeholder="County" value={county} onChange={onCountyChange} />
+                        </Form.Group>
+                    </Col>
+
+                    <Col>
+                        <Form.Group as={Col} controlId="">
                             {/* <Form.Label>State</Form.Label> */}
                             <Form.Control placeholder="State"  value={state} onChange={onStateChange} />
                         </Form.Group>
@@ -183,7 +198,27 @@ export const Results: React.FC<SearchProps> = () => {
 
             </Form>
 
-            {/* form end */}
+            {/* try sort on lower lvl */}
+            <Row>
+                <Col>
+                    <div id="" className=''>
+                        <img src={scale} alt="Covid Scale" className='' style={{ maxHeight: '70px', float: 'left', marginLeft: '15px'}} />
+                    </div> 
+                </Col>
+                <Col>
+                    <Dropdown style={{float: 'right', marginRight: ''}}>
+                        <Dropdown.Toggle variant="primary" id="">
+                            Sort By:
+                        </Dropdown.Toggle>
+
+                        <Dropdown.Menu>
+                            <Dropdown.Item eventKey="1">Location</Dropdown.Item>
+                            <Dropdown.Item eventKey="2">Covid Index</Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
+                </Col>
+            </Row>
+
             {data.length !== 0 ? 
                  _createCards() 
                 :
