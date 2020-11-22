@@ -23,7 +23,7 @@ export const Results: React.FC<SearchProps> = () => {
     const queryParams = React.useMemo(() => new URLSearchParams(loc.search), [loc]);
 
     React.useEffect(() => {
-        if (queryParams.get("address") && queryParams.get("city") && queryParams.get("state") && queryParams.get("zipCode") && queryParams.get("county")) {
+        if (queryParams.get("address") && queryParams.get("city") && queryParams.get("state") && queryParams.get("zipCode")) {
             onFormSubmit();
         }
     }, [queryParams])
@@ -38,9 +38,6 @@ export const Results: React.FC<SearchProps> = () => {
     const [city, changeCity] = React.useState(queryParams.get('city') || '');
     const onCityChange = (e: React.ChangeEvent<HTMLInputElement>) => changeCity(e.target.value || '');
 
-    const [county, changeCounty] = React.useState(queryParams.get('city') || '');
-    const onCountyChange = (e: React.ChangeEvent<HTMLInputElement>) => changeCounty(e.target.value || '');
-
     const [state, changeState] = React.useState(queryParams.get('state') || '');
     const onStateChange = (e: React.ChangeEvent<HTMLInputElement>) => changeState(e.target.value || '');
 
@@ -49,14 +46,14 @@ export const Results: React.FC<SearchProps> = () => {
 
     // const [sort, changeSort] = React.useState();
     // const onSortChange = (e: React.ChangeEvent<Dropdown>) => changeAddress(zipCode || '');
-    
+
     // returned location
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [data, changeData] = React.useState([] as any[]);
 
     // check if form filled  out
     const disableButton = () => {
-        if (address === '' || city === '' || state === '' || zipCode === '' || county == '') {
+        if (address === '' || city === '' || state === '' || zipCode === '') {
             return true;
         }
         return false
@@ -122,7 +119,7 @@ export const Results: React.FC<SearchProps> = () => {
         try {
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const locations = await fetch(`/locations?address=${address}&city=${city}&county=${county}&state=${state}&zipCode=${zipCode}`).then((resp:any) => resp.json());
+            const locations = await fetch(`/locations?address=${address}&city=${city}&state=${state}&zipCode=${zipCode}`).then((resp:any) => resp.json());
             console.log(locations)
             addToast("Successful Search", {appearance: 'success'});
             changeData(locations);
@@ -164,13 +161,6 @@ export const Results: React.FC<SearchProps> = () => {
                         <Form.Group as={Col} controlId="">
                             {/* <Form.Label>City</Form.Label> */}
                             <Form.Control placeholder="City" value={city} onChange={onCityChange} />
-                        </Form.Group>
-                    </Col>
-
-                    <Col>
-                        <Form.Group as={Col} controlId="">
-                            {/* <Form.Label>City</Form.Label> */}
-                            <Form.Control placeholder="County" value={county} onChange={onCountyChange} />
                         </Form.Group>
                     </Col>
 
