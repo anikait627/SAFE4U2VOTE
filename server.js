@@ -19,9 +19,9 @@ app.get("/locations", async (req, res) => {
     //https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=1500&type=restaurant&keyword=cruise&key=YOUR_API_KEY
     const baseCivicsRequest = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=";
     const { address, city, state, zipCode }  = req.query;
-    const addressVar = `${address}${city}`;
     
-
+    // changes for data
+    const addressVar = `${address}${city}`;
     const GeoRequest = baseGeoRequest + address + ",+" + city + ",+" + state + "&key=" + process.env.GOOGLE_API_KEY;
     const lnglat = await fetch(GeoRequest).then((resp) => resp.json());
     address_component = lnglat['results'][0]["address_components"]
@@ -45,15 +45,24 @@ app.get("/locations", async (req, res) => {
 
     const pollloca = locations['results'];
     console.log(pollloca)
+  
+//     const addressVar = `${address} ${city} ${state} ${zipCode}`;
+//     const fullRequest = baseCivicsRequest + "?key=" + process.env.GOOGLE_API_KEY + "&address=" + encodeURIComponent(addressVar) + "&electionId=2000";
+//     const locations = await fetch(fullRequest).then((resp) => resp.json());
+//     console.log(locations);
+//     const pollloca = locations['pollingLocations'];
+
+    
+
    
     
 
     //COVID index
     //for every location in the locations['earlyVoteSites']
     for (var locat in pollloca) {
-      
-
+ 
       //https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=40.6655101,-73.89188969999998&destinations=40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.6334271%7C40.598566%2C-73.7527626%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.6334271%7C40.598566%2C-73.7527626&key=YOUR_API_KEY
+
 
       var ratio = (death + confirm + Math.random()).toFixed(2);
       pollloca[locat] = {...pollloca[locat], index: ratio};
@@ -88,9 +97,6 @@ app.get("/locations", async (req, res) => {
 
       //store them as locations['COVID-Index']
 
-    // sort the res by covid indx
-    pollloca.sort((a,b) => a.index - b.index);
-    //console.log(pollloca)
     return res.json(pollloca);
 
     //return res.json(locations['pollingLocations']);
