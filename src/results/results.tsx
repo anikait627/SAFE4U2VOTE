@@ -79,7 +79,7 @@ export const Results: React.FC<SearchProps> = () => {
                                 </Col>
                                 <Col>
                                     <Card.Text style={{float: 'right'}}>
-                                    DISTANCE: distance from searched location 
+                                    DISTANCE: {data[i]['dist']}
                                     </Card.Text>
                                 </Col>
                             </Row>
