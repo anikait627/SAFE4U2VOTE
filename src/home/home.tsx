@@ -24,9 +24,6 @@ export const Home: React.FC<SearchProps> = (props) => {
     const [city, changeCity] = React.useState(props.defaultCity || '');
     const onCityChange = (e: React.ChangeEvent<HTMLInputElement>) => changeCity(e.target.value || '');
 
-    const [county, changeCounty] = React.useState(props.defaultCounty || '');
-    const onCountyChange = (e: React.ChangeEvent<HTMLInputElement>) => changeCounty(e.target.value || '');
-
     const [state, changeState] = React.useState(props.defaultState || '');
     const onStateChange = (e: React.ChangeEvent<HTMLInputElement>) => changeState(e.target.value || '');
 
@@ -82,11 +79,6 @@ export const Home: React.FC<SearchProps> = (props) => {
                     <Form.Group as={Col} controlId="">
                     <Form.Label>City</Form.Label>
                     <Form.Control placeholder="College Station" value={city} onChange={onCityChange} />
-                    </Form.Group>
-
-                    <Form.Group as={Col} controlId="">
-                    <Form.Label>County</Form.Label>
-                    <Form.Control placeholder="Brazos" value={county} onChange={onCountyChange} />
                     </Form.Group>
 
                     <Form.Group as={Col} controlId="">
