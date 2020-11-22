@@ -2,7 +2,6 @@ import  React from 'react';
 import { useLocation } from 'react-router-dom';
 import { Form, Col, Button, Card, Row } from 'react-bootstrap';
 import { useToasts } from 'react-toast-notifications';
-import { Dropdown } from 'react-bootstrap';
 import './index.css';
 import logo from '../assets/logo.png';
 import scale from '../assets/scale.svg';
@@ -44,8 +43,8 @@ export const Results: React.FC<SearchProps> = () => {
     const [zipCode, changeZipCode] = React.useState(queryParams.get('zipCode') || '');
     const onZipCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => changeZipCode(e.target.value || '');
 
-    // const [sort, changeSort] = React.useState();
-    // const onSortChange = (e: React.ChangeEvent<Dropdown>) => changeAddress(zipCode || '');
+    const [sort, changeSort] = React.useState("1");
+    const onSortChange = (e: React.ChangeEvent<HTMLInputElement>) => changeSort(e.target.value);
 
     // returned location
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -59,6 +58,15 @@ export const Results: React.FC<SearchProps> = () => {
         return false
     }
 
+    // check sort
+    const sortCards = () => {
+        if (sort == "1") {
+            data.sort((a,b) => a.distance - b.distance);
+        } else if (sort == "2") {
+            data.sort((a,b) => a.index - b.index);
+        }
+    }
+
     // change data on search
     const _createCards = React.useCallback(() => {
         
@@ -66,6 +74,7 @@ export const Results: React.FC<SearchProps> = () => {
         // check size of data
         if(data.length === 0) return;
         const tempIndx = (data.length > 10) ? 10 : data.length;
+        sortCards();
 
         // iterate for the top 10 cards
         for(let i = 0; i < tempIndx; i++) {
@@ -123,7 +132,6 @@ export const Results: React.FC<SearchProps> = () => {
             console.log(locations)
             addToast("Successful Search", {appearance: 'success'});
             changeData(locations);
-            console.log(locations);
 
         } catch(e) {
             addToast(`Search Not Successful: ${e}`, {appearance: 'error'});
@@ -186,28 +194,24 @@ export const Results: React.FC<SearchProps> = () => {
 
                 </Form.Row>
 
+                <Row>
+                    <Col>
+                        <div id="" className=''>
+                            <img src={scale} alt="Covid Scale" className='' style={{ maxHeight: '70px', float: 'left', marginLeft: '15px'}} />
+                        </div> 
+                    </Col>
+                    <Col>
+                        <Form.Group as={Col} controlId="" style={{float: 'right', maxWidth: "300px"}} >
+                            <Form.Label style={{float: 'right'}}>Sort By:</Form.Label>
+                            <Form.Control as="select" value={sort} onChange={onSortChange} defaultValue="1">
+                                <option value="1">Distance</option>
+                                <option value="2">Covid Index</option>
+                            </Form.Control>
+                        </Form.Group>
+                    </Col>
+                </Row>
+
             </Form>
-
-            {/* try sort on lower lvl */}
-            <Row>
-                <Col>
-                    <div id="" className=''>
-                        <img src={scale} alt="Covid Scale" className='' style={{ maxHeight: '70px', float: 'left', marginLeft: '15px'}} />
-                    </div> 
-                </Col>
-                <Col>
-                    <Dropdown style={{float: 'right', marginRight: ''}}>
-                        <Dropdown.Toggle variant="primary" id="">
-                            Sort By:
-                        </Dropdown.Toggle>
-
-                        <Dropdown.Menu>
-                            <Dropdown.Item eventKey="1">Location</Dropdown.Item>
-                            <Dropdown.Item eventKey="2">Covid Index</Dropdown.Item>
-                        </Dropdown.Menu>
-                    </Dropdown>
-                </Col>
-            </Row>
 
             {data.length !== 0 ? 
                  _createCards() 
