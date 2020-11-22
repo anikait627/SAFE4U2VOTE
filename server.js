@@ -23,11 +23,8 @@ app.get("/locations", async (req, res) => {
     
     const baseGeoRequest = "https://maps.googleapis.com/maps/api/geocode/json?address="
     //https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=1500&type=restaurant&keyword=cruise&key=YOUR_API_KEY
-    const baseCivicsRequest = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=";
-    const { address, city, state, zipCode }  = req.query;
     
     // changes for data
-    const addressVar = `${address}${city}`;
     const GeoRequest = baseGeoRequest + address + ",+" + city + ",+" + state + "&key=" + process.env.GOOGLE_API_KEY;
     const lnglat = await fetch(GeoRequest).then((resp) => resp.json());
     address_component = lnglat['results'][0]["address_components"]
@@ -82,10 +79,17 @@ app.get("/locations", async (req, res) => {
     address_component = lnglat['results'][0]["address_components"]
     //console.log(address_component)
     //console.log(address_component[address_component.length-4]);
-    county = address_component[address_component.length-4]['short_name'];//.slice(0,-6);
+    for (addlevel in address_component) {
+      //console.log(address_component[addlevel]['types'][0]);
+      if (address_component[addlevel]['types'][0] == "administrative_area_level_2") {
+        console.log("find county");
+        county = address_component[addlevel]['short_name'];
+      }
+    }
+    //.slice(0,-6);
     //console.log(county, county.substr(county.length-6));
-    if (county.substr(county.length-6) == "County"){county = address_component[address_component.length-4]['short_name'].slice(0,-6);}
-    //console.log(county);
+    if (county.substr(county.length-6) == "County"){county = county.slice(0,-6);}
+    console.log(county);
 
     //https://services9.arcgis.com/6Hv9AANartyT7fJW/arcgis/rest/services/USCounties_cases_V1/FeatureServer/0/query?where=Countyname%20%3D%20'BRAZOS'&outFields=Deaths,Confirmed&outSR=4326&f=json
     const covidRequest = "https://services9.arcgis.com/6Hv9AANartyT7fJW/arcgis/rest/services/USCounties_cases_V1/FeatureServer/0/query?where=Countyname%20%3D%20'" + county+ "'&outFields=Deaths,Confirmed&outSR=4326&f=json";
@@ -117,9 +121,15 @@ app.get("/locations", async (req, res) => {
 
       const address1 = pollloca[locat]['vicinity'];
       const distRequest = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins="+address + "%2B" + city + "%20" + state +"%20united states&destinations="+ address1 + "%2B"+ city + "%20" + state + "%20United States&key="+ process.env.GOOGLE_API_KEY;;
-      const dist = await fetch(distRequest).then((resp) => resp.json());
-      console.log(dist['rows'][0]['elements'][0]['distance']['text'])
-      pollloca[locat] = {...pollloca[locat], dist: dist['rows'][0]['elements'][0]['distance']['text']};
+      try{
+        const dist = await fetch(distRequest).then((resp) => resp.json());
+      //console.log(dist['rows'][0]['elements'][0]['distance']['text'])
+        pollloca[locat] = {...pollloca[locat], dist: dist['rows'][0]['elements'][0]['distance']['text']};
+      }
+      catch(d){
+        console.log("cannot find distance");
+        pollloca[locat] = {...pollloca[locat], dist: "n/a"};
+      }
     }
     return res.json(pollloca);
   }
