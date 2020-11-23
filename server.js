@@ -11,7 +11,6 @@ app.use(cors())
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// google civic api endpoint
 app.get("/locations", async (req, res) => {
   try {
     const baseCivicsRequest = "https://www.googleapis.com/civicinfo/v2/voterinfo";
@@ -21,27 +20,19 @@ app.get("/locations", async (req, res) => {
     const pollloca = locations['pollingLocations'];
     
     const baseGeoRequest = "https://maps.googleapis.com/maps/api/geocode/json?address="
-    //https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=1500&type=restaurant&keyword=cruise&key=YOUR_API_KEY
-    
-    // changes for data
     const GeoRequest = baseGeoRequest + address + ",+" + city + ",+" + state + "&key=" + process.env.GOOGLE_API_KEY;
     const lnglat = await fetch(GeoRequest).then((resp) => resp.json());
     address_component = lnglat['results'][0]["address_components"]
     county = address_component[address_component.length-4]['short_name'];//.slice(0,-6);
     if (county.substr(county.length-6) == "County"){county = address_component[address_component.length-4]['short_name'].slice(0,-6);}
 
-    //https://services9.arcgis.com/6Hv9AANartyT7fJW/arcgis/rest/services/USCounties_cases_V1/FeatureServer/0/query?where=Countyname%20%3D%20'BRAZOS'&outFields=Deaths,Confirmed&outSR=4326&f=json
     const covidRequest = "https://services9.arcgis.com/6Hv9AANartyT7fJW/arcgis/rest/services/USCounties_cases_V1/FeatureServer/0/query?where=Countyname%20%3D%20'" + county+ "'&outFields=Deaths,Confirmed&outSR=4326&f=json";
     const covid = await fetch(covidRequest).then((resp) => resp.json());
     const death = covid['features'][0]['attributes']['Deaths'];
     const confirm = covid['features'][0]['attributes']['Confirmed'];
 
-    //COVID index
-    for (var locat in pollloca) {
  
-      //https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=40.6655101,-73.89188969999998&destinations=40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.6334271%7C40.598566%2C-73.7527626%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.6334271%7C40.598566%2C-73.7527626&key=YOUR_API_KEY
-
-
+    for (var locat in pollloca) {
       var ratio = (death + confirm + Math.random()).toFixed(2);
       pollloca[locat] = {...pollloca[locat], index: ratio};
       pollloca[locat] = {...pollloca[locat], city: city};
@@ -49,34 +40,29 @@ app.get("/locations", async (req, res) => {
       pollloca[locat] = {...pollloca[locat], zipCode: zipCode};
 
       const address1 = pollloca[locat]['vicinity'];
-      const distRequest = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins="+address + "%2B" + city + "%20" + state +"%20united states&destinations="+ address1 + "%2B"+ city + "%20" + state + "%20United States&key="+ process.env.GOOGLE_API_KEY;;
+      const distRequest = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins="+address + "%2B" + city + "%20" + 
+      state +"%20united states&destinations="+ address1 + "%2B"+ city + "%20" + state + "%20United States&key="+ process.env.GOOGLE_API_KEY;;
       const dist = await fetch(distRequest).then((resp) => resp.json());
       pollloca[locat] = {...pollloca[locat], dist: dist['rows'][0]['elements'][0]['distance']['text']};
     }
     return res.json(pollloca);
   }
   catch (e) {
-    //https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,
     const baseGeoRequest = "https://maps.googleapis.com/maps/api/geocode/json?address="
-    //https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=1500&type=restaurant&keyword=cruise&key=YOUR_API_KEY
     const baseCivicsRequest = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=";
     const { address, city, state, zipCode }  = req.query;
     
-    // changes for data
     const addressVar = `${address}${city}`;
     const GeoRequest = baseGeoRequest + address + ",+" + city + ",+" + state + "&key=" + process.env.GOOGLE_API_KEY;
     const lnglat = await fetch(GeoRequest).then((resp) => resp.json());
     var address_component = lnglat['results'][0]["address_components"]
-
     for (addlevel in address_component) {
       if (address_component[addlevel]['types'][0] == "administrative_area_level_2") {
         county = address_component[addlevel]['short_name'];
       }
     }
-
     if (county.substr(county.length-6) == "County"){county = county.slice(0,-6);}
 
-    //https://services9.arcgis.com/6Hv9AANartyT7fJW/arcgis/rest/services/USCounties_cases_V1/FeatureServer/0/query?where=Countyname%20%3D%20'BRAZOS'&outFields=Deaths,Confirmed&outSR=4326&f=json
     const covidRequest = "https://services9.arcgis.com/6Hv9AANartyT7fJW/arcgis/rest/services/USCounties_cases_V1/FeatureServer/0/query?where=Countyname%20%3D%20'" + county+ "'&outFields=Deaths,Confirmed&outSR=4326&f=json";
     const covid = await fetch(covidRequest).then((resp) => resp.json());
     const death = covid['features'][0]['attributes']['Deaths'];
@@ -89,10 +75,6 @@ app.get("/locations", async (req, res) => {
     const pollloca = locations['results'];
     
     for (var locat in pollloca) {
- 
-      //https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=40.6655101,-73.89188969999998&destinations=40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.6334271%7C40.598566%2C-73.7527626%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.6334271%7C40.598566%2C-73.7527626&key=YOUR_API_KEY
-
-
       var ratio = (death + confirm + Math.random()).toFixed(2);
       pollloca[locat] = {...pollloca[locat], index: ratio};
       pollloca[locat] = {...pollloca[locat], address: pollloca[locat]['vicinity']};
@@ -102,7 +84,8 @@ app.get("/locations", async (req, res) => {
       pollloca[locat] = {...pollloca[locat], zipCode: zipCode};
 
       const address1 = pollloca[locat]['vicinity'];
-      const distRequest = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins="+address + "%2B" + city + "%20" + state +"%20united states&destinations="+ address1 + "%2B"+ city + "%20" + state + "%20United States&key="+ process.env.GOOGLE_API_KEY;;
+      const distRequest = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins="+address + "%2B" + city + "%20" + state +"%20united states&destinations="
+      + address1 + "%2B"+ city + "%20" + state + "%20United States&key="+ process.env.GOOGLE_API_KEY;
       try{
         const dist = await fetch(distRequest).then((resp) => resp.json());
         var num = (dist['rows'][0]['elements'][0]['distance']['text']).split(" ");
