@@ -84,7 +84,7 @@ app.get("/locations", async (req, res) => {
       //console.log(address_component[addlevel]['types'][0]);
       if (address_component[addlevel]['types'][0] == "administrative_area_level_2") {
         console.log("find county");
-        county = address_component[addlevel]['short_name'];
+         var county = address_component[addlevel]['short_name'];
       }
     }
     //.slice(0,-6);
@@ -100,23 +100,39 @@ app.get("/locations", async (req, res) => {
     const confirm = covid['features'][0]['attributes']['Confirmed'];
 
     //population call
-    const states = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota','Ohio','Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming'];
-    const stateID = states.indexOf(state);
+    console.log(state);
+    const states = ['','Alabama','Alaska','','Arizona','Arkansas','California','','Colorado','Connecticut','Delaware','','Florida','Georgia','','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota','Ohio','Oklahoma','Oregon','Pennsylvania','','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont','Virginia','','Washington','West Virginia','Wisconsin','Wyoming'];
+    const statesAb = [
+      '','AL','AK','','AZ','AR','CA','','CO','CT','DE','','FL','GA','',
+      'HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA',
+      'MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND',
+      'OH','OK','OR','PA','','RI','SC','SD','TN','TX','UT',
+      'VT','VA','','WA','WV','WI','WY'
+     ];
+    var stateID = statesAb.indexOf(state);
+    const fullState = states[stateID];
     if (stateID < 10){
       stateID = "0" + stateID;
     }
     const populationRequest = "https://api.census.gov/data/2019/pep/population?get=NAME,DENSITY,POP&for=county:*&in=state:" + stateID + "&key=" + process.env.POP_API_KEY;
-    const pop = await fetch(populationRequest).then((resp) => resp.csv());
+    const pop = await fetch(populationRequest).then((resp) => resp.json());
+    console.log(pop);
 
-    function findCounty(item){
-      return item[0] == (county + " County, " + state);
+    function findCounty(arr){
+      for (var i=0; i < arr.length; i++)
+        if (arr[i][0] == (county + "County, " + fullState))
+          return i;
     }
-    const countyIndex = pop.findIndex(findCounty);
+
+    const countyIndex = findCounty(pop);
+    console.log(county + "County, " + fullState);
+    console.log(countyIndex);
     const density = pop[countyIndex][1];
     const population = pop[countyIndex][2];
 
     console.log("density " + density);
     console.log("population " + population); 
+    //end population call
 
     const fullRequest = baseCivicsRequest + lnglat['results'][0]["geometry"]["location"]["lat"] + "," + lnglat['results'][0]["geometry"]["location"]["lng"]
     + "&radius=5000&type=restaurants" + "&key=" + process.env.GOOGLE_API_KEY;
@@ -131,7 +147,7 @@ app.get("/locations", async (req, res) => {
       //https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=40.6655101,-73.89188969999998&destinations=40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.6334271%7C40.598566%2C-73.7527626%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.6334271%7C40.598566%2C-73.7527626&key=YOUR_API_KEY
 
 
-      var ratio = (death + confirm + Math.random()).toFixed(2);
+      var ratio = (2 * death + confirm + density * population) / (2 * 255,000 + 12000000 + 94 * 331500000) * 5 * (.95 + Math.random()*.1);
       pollloca[locat] = {...pollloca[locat], index: ratio};
       pollloca[locat] = {...pollloca[locat], address: pollloca[locat]['vicinity']};
       pollloca[locat] = {...pollloca[locat], name: pollloca[locat]['name']};
