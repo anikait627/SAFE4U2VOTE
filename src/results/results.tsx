@@ -4,6 +4,7 @@ import { Form, Col, Button, Card, Row } from 'react-bootstrap';
 import { useToasts } from 'react-toast-notifications';
 import './index.css';
 import logo from '../assets/logo.png';
+import scale from '../assets/scale.svg';
 
 // setup interface for search
 export interface SearchProps {
@@ -32,7 +33,7 @@ export const Results: React.FC<SearchProps> = () => {
     // init variables for input
     const [address, changeAddress] = React.useState(queryParams.get('address') || '');
     const onAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => changeAddress(e.target.value || '');
-
+    
     const [city, changeCity] = React.useState(queryParams.get('city') || '');
     const onCityChange = (e: React.ChangeEvent<HTMLInputElement>) => changeCity(e.target.value || '');
 
@@ -41,6 +42,10 @@ export const Results: React.FC<SearchProps> = () => {
 
     const [zipCode, changeZipCode] = React.useState(queryParams.get('zipCode') || '');
     const onZipCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => changeZipCode(e.target.value || '');
+
+    const [sort, changeSort] = React.useState("1");
+    const onSortChange = (e: React.ChangeEvent<HTMLInputElement>) => changeSort(e.target.value);
+
 
     // returned location
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -54,6 +59,15 @@ export const Results: React.FC<SearchProps> = () => {
         return false
     }
 
+    // check sort
+    const sortCards = () => {
+        if (sort == "1") {
+            data.sort((a,b) => a.dist - b.dist);
+        } else if (sort == "2") {
+            data.sort((a,b) => a.index - b.index);
+        }
+    }
+
     // change data on search
     const _createCards = React.useCallback(() => {
         
@@ -61,11 +75,12 @@ export const Results: React.FC<SearchProps> = () => {
         // check size of data
         if(data.length === 0) return;
         const tempIndx = (data.length > 10) ? 10 : data.length;
+        sortCards();
 
         // iterate for the top 10 cards
         for(let i = 0; i < tempIndx; i++) {
             // search for button
-            const search = 'https://www.google.com/maps/search/' + data[i]['address']['line1'] + " " + data[i]['address']['city'] + ', ' + data[i]['address']['state'] + ' ' + data[i]['address']['zip'];
+            const search = 'https://www.google.com/maps/search/' + data[i]['address'] + " " + data[i]['city'] + ', ' + data[i]['state'] + ' ' + data[i]['zip'];
             cards.push(
                 <div style={{margin: '50px'}}>
 
@@ -74,24 +89,24 @@ export const Results: React.FC<SearchProps> = () => {
                             <Row>
                                 <Col>
                                     <Card.Title style={{float: 'left'}}>
-                                        {data[i]['address']['locationName']}
+                                        {data[i]['name']}
                                     </Card.Title>
                                 </Col>
                                 <Col>
                                     <Card.Text style={{float: 'right'}}>
-                                    DISTANCE: distance from searched location 
+                                    Distance: {data[i]['dist']} mi
                                     </Card.Text>
                                 </Col>
                             </Row>
                             <Row>
                                 <Col>
                                     <Card.Text style={{float: 'left'}}>
-                                        {data[i]['address']['line1'] + " " + data[i]['address']['city'] + ', ' + data[i]['address']['state'] + ' ' + data[i]['address']['zip']}
+                                        {data[i]['address'] + " " + data[i]['city'] + ', ' + data[i]['state'] + ' ' + data[i]['zipCode']}
                                     </Card.Text>
                                 </Col>
                                 <Col>
                                     <Card.Text style={{float: 'right'}}>
-                                        Covid Index: {data[i]['index']}
+                                        Covid Index: {data[i]['index']} 
                                     </Card.Text>
                                 </Col>
                             </Row>
@@ -118,7 +133,6 @@ export const Results: React.FC<SearchProps> = () => {
             console.log(locations)
             addToast("Successful Search", {appearance: 'success'});
             changeData(locations);
-            console.log(locations);
 
         } catch(e) {
             addToast(`Search Not Successful: ${e}`, {appearance: 'error'});
@@ -181,9 +195,25 @@ export const Results: React.FC<SearchProps> = () => {
 
                 </Form.Row>
 
+                <Row>
+                    <Col>
+                        <div id="" className=''>
+                            <img src={scale} alt="Covid Scale" className='' style={{ maxHeight: '70px', float: 'left', marginLeft: '15px'}} />
+                        </div> 
+                    </Col>
+                    <Col>
+                        <Form.Group as={Col} controlId="" style={{float: 'right', maxWidth: "300px"}} >
+                            <Form.Label style={{float: 'right'}}>Sort By:</Form.Label>
+                            <Form.Control as="select" value={sort} onChange={onSortChange} defaultValue="1">
+                                <option value="1">Distance</option>
+                                <option value="2">Covid Index</option>
+                            </Form.Control>
+                        </Form.Group>
+                    </Col>
+                </Row>
+
             </Form>
 
-            {/* form end */}
             {data.length !== 0 ? 
                  _createCards() 
                 :

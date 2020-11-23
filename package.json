@@ -22,6 +22,7 @@
     "node-fetch": "^2.6.1",
     "react": "^16.14.0",
     "react-bootstrap": "^1.4.0",
+    "react-bootstrap-dropdown": "^0.3.0",
     "react-dom": "^16.14.0",
     "react-paginate": "^6.5.0",
     "react-router-dom": "^5.2.0",

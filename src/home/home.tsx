@@ -7,6 +7,7 @@ import { useToasts } from 'react-toast-notifications';
 export interface SearchProps {
     defaultAdress?: string
     defaultCity?: string
+    defaultCounty?: string
     defaultState?: string
     defaultZipCode?: string
 }
