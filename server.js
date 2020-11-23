@@ -76,7 +76,7 @@ app.get("/locations", async (req, res) => {
     const addressVar = `${address}${city}`;
     const GeoRequest = baseGeoRequest + address + ",+" + city + ",+" + state + "&key=" + process.env.GOOGLE_API_KEY;
     const lnglat = await fetch(GeoRequest).then((resp) => resp.json());
-    address_component = lnglat['results'][0]["address_components"]
+    var address_component = lnglat['results'][0]["address_components"]
     //console.log(address_component)
     //console.log(address_component[address_component.length-4]);
     for (addlevel in address_component) {
@@ -123,12 +123,13 @@ app.get("/locations", async (req, res) => {
       const distRequest = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins="+address + "%2B" + city + "%20" + state +"%20united states&destinations="+ address1 + "%2B"+ city + "%20" + state + "%20United States&key="+ process.env.GOOGLE_API_KEY;;
       try{
         const dist = await fetch(distRequest).then((resp) => resp.json());
-      //console.log(dist['rows'][0]['elements'][0]['distance']['text'])
-        pollloca[locat] = {...pollloca[locat], dist: dist['rows'][0]['elements'][0]['distance']['text']};
+        console.log(dist['rows'][0]['elements'][0]['distance']['text']);
+        var num = (dist['rows'][0]['elements'][0]['distance']['text']).split(" ");
+        pollloca[locat] = {...pollloca[locat], dist: parseFloat(num[0])};
       }
       catch(d){
         console.log("cannot find distance");
-        pollloca[locat] = {...pollloca[locat], dist: "n/a"};
+        pollloca[locat] = {...pollloca[locat], dist: "0.0"};
       }
     }
     return res.json(pollloca);

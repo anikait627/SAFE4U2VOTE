@@ -46,6 +46,7 @@ export const Results: React.FC<SearchProps> = () => {
     const [sort, changeSort] = React.useState("1");
     const onSortChange = (e: React.ChangeEvent<HTMLInputElement>) => changeSort(e.target.value);
 
+
     // returned location
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [data, changeData] = React.useState([] as any[]);
@@ -61,7 +62,7 @@ export const Results: React.FC<SearchProps> = () => {
     // check sort
     const sortCards = () => {
         if (sort == "1") {
-            data.sort((a,b) => a.distance - b.distance);
+            data.sort((a,b) => a.dist - b.dist);
         } else if (sort == "2") {
             data.sort((a,b) => a.index - b.index);
         }
@@ -93,7 +94,7 @@ export const Results: React.FC<SearchProps> = () => {
                                 </Col>
                                 <Col>
                                     <Card.Text style={{float: 'right'}}>
-                                    DISTANCE: {data[i]['dist']}
+                                    Distance: {data[i]['dist']} mi
                                     </Card.Text>
                                 </Col>
                             </Row>
@@ -105,7 +106,7 @@ export const Results: React.FC<SearchProps> = () => {
                                 </Col>
                                 <Col>
                                     <Card.Text style={{float: 'right'}}>
-                                        Covid Index: {data[i]['index']}
+                                        Covid Index: {data[i]['index']} 
                                     </Card.Text>
                                 </Col>
                             </Row>
