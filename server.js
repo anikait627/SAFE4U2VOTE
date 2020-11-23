@@ -78,6 +78,9 @@ app.get("/locations", async (req, res) => {
       'VT','VA','','WA','WV','WI','WY'
      ];
     var stateID = statesAb.indexOf(state);
+    if (stateID == -1){
+      stateID = states.indexOf(state);
+    }
     const fullState = states[stateID];
     if (stateID < 10){
       stateID = "0" + stateID;
