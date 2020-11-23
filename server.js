@@ -87,9 +87,8 @@ app.get("/locations", async (req, res) => {
     }
     const populationRequest = "https://api.census.gov/data/2019/pep/population?get=NAME,DENSITY,POP&for=county:*&in=state:" + stateID + "&key=" + process.env.POP_API_KEY;
     const pop = await fetch(populationRequest).then((resp) => resp.json());
-    console.log(pop);
 
-    function findCounty(arr){
+    const findCounty = (arr) => {
       for (var i=0; i < arr.length; i++)
         if (arr[i][0] == (county + "County, " + fullState))
           return i;
@@ -113,7 +112,7 @@ app.get("/locations", async (req, res) => {
     
     for (var locat in pollloca) {
       
-      var ratio = (2 * death + confirm + density * population) / (2 * 255,000 + 12000000 + 94 * 331500000) * 5 * (.95 + Math.random()*.1);
+      var ratio = (2 * death + confirm + density * population) / (2 * 255000 + 12000000 + 94 * 331500000) * 5 * (.95 + Math.random()*.1);
 
       pollloca[locat] = {...pollloca[locat], index: ratio};
       pollloca[locat] = {...pollloca[locat], address: pollloca[locat]['vicinity']};
