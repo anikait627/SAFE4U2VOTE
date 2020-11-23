@@ -44,6 +44,7 @@ app.get("/locations", async (req, res) => {
     //console.log(pollloca)
     //COVID index
     //for every location in the locations['earlyVoteSites']
+
     for (var locat in pollloca) {
  
       //https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=40.6655101,-73.89188969999998&destinations=40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.6334271%7C40.598566%2C-73.7527626%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.6334271%7C40.598566%2C-73.7527626&key=YOUR_API_KEY
@@ -97,6 +98,25 @@ app.get("/locations", async (req, res) => {
     //console.log(covid['features'][0]['attributes']['Deaths'], covid['features'][0]['attributes']['Confirmed']);
     const death = covid['features'][0]['attributes']['Deaths'];
     const confirm = covid['features'][0]['attributes']['Confirmed'];
+
+    //population call
+    const states = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota','Ohio','Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming'];
+    const stateID = states.indexOf(state);
+    if (stateID < 10){
+      stateID = "0" + stateID;
+    }
+    const populationRequest = "https://api.census.gov/data/2019/pep/population?get=NAME,DENSITY,POP&for=county:*&in=state:" + stateID + "&key=" + process.env.POP_API_KEY;
+    const pop = await fetch(populationRequest).then((resp) => resp.csv());
+
+    function findCounty(item){
+      return item[0] == (county + " County, " + state);
+    }
+    const countyIndex = pop.findIndex(findCounty);
+    const density = pop[countyIndex][1];
+    const population = pop[countyIndex][2];
+
+    console.log("density " + density);
+    console.log("population " + population); 
 
     const fullRequest = baseCivicsRequest + lnglat['results'][0]["geometry"]["location"]["lat"] + "," + lnglat['results'][0]["geometry"]["location"]["lng"]
     + "&radius=5000&type=restaurants" + "&key=" + process.env.GOOGLE_API_KEY;
