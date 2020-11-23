@@ -25,7 +25,7 @@ export const Results: React.FC<SearchProps> = () => {
         if (queryParams.get("address") && queryParams.get("city") && queryParams.get("state") && queryParams.get("zipCode")) {
             onFormSubmit();
         }
-    }, [queryParams])
+    }, [queryParams]);
 
     // toasts var
     const { addToast } = useToasts();
@@ -68,6 +68,11 @@ export const Results: React.FC<SearchProps> = () => {
         }
     }
 
+    React.useEffect(() => {
+        sortCards();
+        _createCards();
+    }, [sort]);
+
     // change data on search
     const _createCards = React.useCallback(() => {
         
@@ -76,11 +81,12 @@ export const Results: React.FC<SearchProps> = () => {
         if(data.length === 0) return;
         const tempIndx = (data.length > 10) ? 10 : data.length;
         sortCards();
-
+        const current_address = address + " " + city + ", " + state + " " + zipCode;
         // iterate for the top 10 cards
         for(let i = 0; i < tempIndx; i++) {
             // search for button
-            const search = 'https://www.google.com/maps/search/' + data[i]['address'] + " " + data[i]['city'] + ', ' + data[i]['state'] + ' ' + data[i]['zip'];
+            const goto_address = data[i]['address'] + " " + data[i]['city'] + ', ' + data[i]['state'] + ' ' + data[i]['zipCode'];
+            const search = 'https://www.google.com/maps/dir/' + current_address + '/' + goto_address;
             cards.push(
                 <div style={{margin: '50px'}}>
 
