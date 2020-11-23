@@ -61,7 +61,7 @@ export const Results: React.FC<SearchProps> = () => {
     // check sort
     const sortCards = () => {
         if (sort == "1") {
-            data.sort((a,b) => a.distance - b.distance);
+            data.sort((a,b) => a.dist - b.dist);
         } else if (sort == "2") {
             data.sort((a,b) => a.index - b.index);
         }

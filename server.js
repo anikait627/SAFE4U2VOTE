@@ -24,10 +24,10 @@ app.get("/locations", async (req, res) => {
     const addressVar = `${address}${city}`;
     const GeoRequest = baseGeoRequest + address + ",+" + city + ",+" + state + "&key=" + process.env.GOOGLE_API_KEY;
     const lnglat = await fetch(GeoRequest).then((resp) => resp.json());
-    address_component = lnglat['results'][0]["address_components"]
+    var address_component = lnglat['results'][0]["address_components"]
     //console.log(address_component)
     //console.log(address_component[address_component.length-4]);
-    county = address_component[address_component.length-4]['short_name'];//.slice(0,-6);
+    var county = address_component[address_component.length-4]['short_name'];//.slice(0,-6);
     //console.log(county, county.substr(county.length-6));
     if (county.substr(county.length-6) == "County"){county = address_component[address_component.length-4]['short_name'].slice(0,-6);}
     //console.log(county);
@@ -73,7 +73,7 @@ app.get("/locations", async (req, res) => {
       pollloca[locat] = {...pollloca[locat], zipCode: zipCode};
 
       const address1 = pollloca[locat]['vicinity'];
-      const distRequest = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins="+address + "%2B" + city + "%20" + state +"%20united states&destinations="+ address1 + "%2B"+ city + "%20" + state + "%20United States&key="+ process.env.GOOGLE_API_KEY;;
+      const distRequest = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins="+address + "%2B" + city + "%20" + state +"%20united states&destinations="+ address1 + "%2B"+ city + "%20" + state + "%20United States&key="+ process.env.GOOGLE_API_KEY;
       const dist = await fetch(distRequest).then((resp) => resp.json());
       //console.log(dist['rows'][0]['elements'][0]['distance']['text'])
       pollloca[locat] = {...pollloca[locat], dist: dist['rows'][0]['elements'][0]['distance']['text']};
@@ -97,6 +97,7 @@ app.get("/locations", async (req, res) => {
 
       //store them as locations['COVID-Index']
 
+    console.log(pollloca)
     return res.json(pollloca);
 
     //return res.json(locations['pollingLocations']);
