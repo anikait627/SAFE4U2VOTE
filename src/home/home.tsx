@@ -64,7 +64,8 @@ export const Home: React.FC<SearchProps> = (props) => {
             <div style={{width:'500px', margin:'auto', position:'relative'}}>
 
             <a href='/' style={{color: 'black', textDecoration: 'none'}}><h1 style={{textAlign: 'center'}} >SAFE4U2VOTE</h1></a>
-            <p style={{textAlign: 'center'}} >Helping you locate the safest and nearest polling location</p>
+            <p style={{textAlign: 'center'}} >Helping you locate the safest and nearest polling location.</p>
+            <p style={{textAlign: 'center'}} >Please enter your address of registration.</p>
 
             {/* form start */}
             <Form onSubmit={onSubmit} >

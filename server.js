@@ -113,6 +113,7 @@ app.get("/locations", async (req, res) => {
     for (var locat in pollloca) {
       
       var ratio = (2 * death + confirm + density * population) / (2 * 255000 + 12000000 + 94 * 331500000) * 5 * (.95 + Math.random()*.1);
+      ratio = ratio.toFixed(2);
 
       pollloca[locat] = {...pollloca[locat], index: ratio};
       pollloca[locat] = {...pollloca[locat], address: pollloca[locat]['vicinity']};
